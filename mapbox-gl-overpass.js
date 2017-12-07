@@ -20,7 +20,11 @@ function MapboxOverpass(options) {
     query: false,
     style: styleLayers,
     showButton: true,
-    overpassUrl: 'https://overpass-api.de/api/interpreter'
+    QueryOverpass: {
+      overpassUrl: 'https://overpass-api.de/api/interpreter',
+      flatProperties: true
+    }
+
   }, options);
 
   this.toggle = this.toggle.bind(this);
@@ -110,7 +114,7 @@ MapboxOverpass.prototype._updateMap = function() {
     var overpassQuery = this._toggle._input.value.replace(/{{bbox}}/g, [bbox._sw.lat, bbox._sw.lng, bbox._ne.lat, bbox._ne.lng].join()); // Replace {{bbox}} token with map bounds
     QueryOverpass(overpassQuery, function(e, geojson) {
       _this._map.getSource('overpass').setData(geojson);
-    }, {overpassUrl: this.options.overpassUrl});
+    }, {this.options.QueryOverpass});
 
   }
 }

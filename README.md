@@ -6,7 +6,7 @@ A [Mapbox GL JS plugin](https://www.mapbox.com/blog/build-mapbox-gl-js-plugins/)
 **When using NPM**
 
 ```bash
-npm install --save mapbox-gl @mapbox/mapbox-gl-overpass
+npm install --save mapbox-gl mapbox-gl-overpass
 ```
 
 ```javascript
