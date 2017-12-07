@@ -1,0 +1,30 @@
+{
+  "name": "mapbox-gl-overpass",
+  "version": "0.0.1",
+  "description": "A Mapbox GL JS plugin to query data from the OpenStreetMap project via the Overpass API",
+  "main": "mapbox-gl-overpass.js",
+  "dependencies": {
+    "query-overpass": "^1.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/planemad/mapbox-gl-overpass.git"
+  },
+  "keywords": [
+    "mapbox",
+    "overpass",
+    "overpassql",
+    "mapbox-gl-js",
+    "openstreetmap"
+  ],
+  "author": "Arun Ganesh",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/planemad/mapbox-gl-overpass/issues"
+  },
+  "homepage": "https://github.com/planemad/mapbox-gl-overpass#readme"
+}
