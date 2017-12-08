@@ -19,7 +19,7 @@ function MapboxOverpass(options) {
     enabled: false,
     query: null,
     style: {
-      label: '{name:kn}',
+      label: '{name}',
       labelSize: 10,
       color: '#ff00ed',
       size: 5,
