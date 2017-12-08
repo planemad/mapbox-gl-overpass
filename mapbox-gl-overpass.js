@@ -17,7 +17,7 @@ function MapboxOverpass(options) {
 
   this.options = Object.assign({
     enabled: false,
-    query: false,
+    query: null,
     style: styleLayers,
     showButton: true,
     QueryOverpass: {
@@ -111,8 +111,8 @@ MapboxOverpass.prototype._updateMap = function() {
     var bbox = this._map.getBounds();
     var data;
     var _this = this;
-    var overpassQuery = this._toggle._input.value.replace(/{{bbox}}/g, [bbox._sw.lat, bbox._sw.lng, bbox._ne.lat, bbox._ne.lng].join()); // Replace {{bbox}} token with map bounds
-    QueryOverpass(overpassQuery, function(e, geojson) {
+    var overpassQL = this._toggle._input.value.replace(/{{bbox}}/g, [bbox._sw.lat, bbox._sw.lng, bbox._ne.lat, bbox._ne.lng].join()); // Replace {{bbox}} token with map bounds
+    QueryOverpass(overpassQL, function(e, geojson) {
       _this._map.getSource('overpass').setData(geojson);
     }, {this.options.QueryOverpass});
 
