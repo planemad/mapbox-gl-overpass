@@ -1,6 +1,6 @@
 {
   "name": "mapbox-gl-overpass",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A Mapbox GL JS plugin to query data from the OpenStreetMap project via the Overpass API",
   "main": "mapbox-gl-overpass.js",
   "dependencies": {
