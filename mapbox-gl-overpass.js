@@ -18,7 +18,14 @@ function MapboxOverpass(options) {
   this.options = Object.assign({
     enabled: false,
     query: null,
-    style: styleLayers,
+    style: {
+      label: '{name:kn}',
+      labelSize: 10,
+      color: '#ff00ed',
+      size: 5,
+      opacity: 0.5,
+      layers: null
+    },
     showButton: true,
     QueryOverpass: {
       overpassUrl: 'https://overpass-api.de/api/interpreter',
@@ -80,9 +87,13 @@ MapboxOverpass.prototype.render = function() {
     });
     var topRoadLayer = roadLayers[roadLayers.length - 1].id;
 
+    // Build the style layers for the data
+    if (!this.options.style.layers) {
+      this.options.style.layers = buildStyleLayers(this.options.style);
+    }
     // Add the style layers
     var style = this._map.getStyle();
-    var mapStyle = addStyleLayers(style, styleLayers, topRoadLayer);
+    var mapStyle = addStyleLayers(style, this.options.style.layers, topRoadLayer);
     this._map.setStyle(mapStyle);
     this._toggle._input.onkeypress = (e) => {
       // On hitting return in the query input
@@ -114,7 +125,7 @@ MapboxOverpass.prototype._updateMap = function() {
     var overpassQL = this._toggle._input.value.replace(/{{bbox}}/g, [bbox._sw.lat, bbox._sw.lng, bbox._ne.lat, bbox._ne.lng].join()); // Replace {{bbox}} token with map bounds
     QueryOverpass(overpassQL, function(e, geojson) {
       _this._map.getSource('overpass').setData(geojson);
-    }, {this.options.QueryOverpass});
+    }, this.options.QueryOverpass);
 
   }
 }
@@ -213,54 +224,58 @@ MapboxOverpass.prototype._hasSource = function() {
 /**
  * Define layers
  */
-var styleLayers = [
-  {
-    'id': 'overpass fill',
-    'type': 'fill',
-    'source': 'overpass',
-    'paint': {
-      'fill-color': '#ff00ed',
-      'fill-opacity': 0.2
-    },
-    'filter': ["==", "$type", "Polygon"]
-  }, {
-    'id': 'overpass line',
-    'type': 'line',
-    'source': 'overpass',
-    'paint': {
-      'line-color': '#ff00ed',
-      'line-width': 20,
-      'line-opacity': 0.5
+function buildStyleLayers(options) {
+  var styleLayers = [
+    {
+      'id': 'overpass fill',
+      'type': 'fill',
+      'source': 'overpass',
+      'paint': {
+        'fill-color': options.color,
+        'fill-opacity': options.opacity
+      },
+      'filter': ["==", "$type", "Polygon"]
+    }, {
+      'id': 'overpass line',
+      'type': 'line',
+      'source': 'overpass',
+      'paint': {
+        'line-color': options.color,
+        'line-width': options.size,
+        'line-opacity': options.opacity
+      }
+    }, {
+      'id': 'overpass circle',
+      'type': 'circle',
+      'source': 'overpass',
+      'paint': {
+        'circle-color': options.color,
+        'circle-radius': options.size,
+        'circle-opacity': options.opacity
+      }
+    }, {
+      'id': 'overpass symbol',
+      'type': 'symbol',
+      'source': 'overpass',
+      'layout': {
+        'text-field': options.label,
+        'text-size': options.labelSize,
+        "text-font": [
+          "Open Sans Semibold", "Arial Unicode MS Bold"
+        ],
+        'text-anchor': 'top'
+      }
     }
-  }, {
-    'id': 'overpass circle',
-    'type': 'circle',
-    'source': 'overpass',
-    'paint': {
-      'circle-color': '#ff00ed',
-      'circle-radius': 10,
-      'circle-opacity': 0.5
-    }
-  }, {
-    'id': 'overpass symbol',
-    'type': 'symbol',
-    'source': 'overpass',
-    'layout': {
-      'text-field': '{name}',
-      'text-allow-overlap': true,
-      "text-font": [
-        "Open Sans Semibold", "Arial Unicode MS Bold"
-      ],
-      'text-offset': [
-        0, 5
-      ],
-      'text-anchor': 'top'
-    }
-  }
-];
+  ];
+
+  return styleLayers;
+
+}
 
 // Add style layers to the map
 function addStyleLayers(style, layers, before) {
+  // Replace text-field property
+
   for (var i = 0; i < style.layers.length; i++) {
     var layer = style.layers[i];
     if (before === layer.id) {
